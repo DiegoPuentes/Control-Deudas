@@ -8,116 +8,102 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
   :root {
-    --bg: #0f0f0f; --bg2: #161616; --bg3: #1e1e1e; --bg4: #252525;
-    --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.12);
-    --text: #f0f0f0; --text2: #888; --text3: #555;
-    --accent: #c8f55a; --accent2: #8fde45;
-    --red: #ff5e5e; --amber: #ffb547; --blue: #5eb8ff; --green: #5effa0;
-    --mono: 'DM Mono', monospace; --sans: 'Sora', sans-serif;
+    --bg:#0f0f0f;--bg2:#161616;--bg3:#1e1e1e;--bg4:#252525;
+    --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+    --text:#f0f0f0;--text2:#888;--text3:#555;
+    --accent:#c8f55a;--accent2:#8fde45;
+    --red:#ff5e5e;--amber:#ffb547;--blue:#5eb8ff;--green:#5effa0;
+    --mono:'DM Mono',monospace;--sans:'Sora',sans-serif;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100vh; }
-  nav { position: sticky; top: 0; z-index: 100; background: rgba(15,15,15,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 1.25rem; display: flex; align-items: center; height: 52px; gap: 8px; }
-  .nav-logo { font-family: var(--mono); font-size: 12px; color: var(--accent); margin-right: auto; letter-spacing: 0.04em; }
-  .nav-tabs { display: flex; gap: 2px; }
-  .nav-tab { padding: 5px 11px; border-radius: 6px; font-size: 12px; color: var(--text2); cursor: pointer; border: none; background: transparent; font-family: var(--sans); transition: all 0.15s; white-space: nowrap; }
-  .nav-tab:hover { color: var(--text); background: var(--bg3); }
-  .nav-tab.active { color: var(--accent); background: rgba(200,245,90,0.08); }
-  .page { display: none; padding: 1.25rem; max-width: 860px; margin: 0 auto; animation: fi 0.2s ease; }
-  .page.active { display: block; }
-  @keyframes fi { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:translateY(0); } }
-  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 1.1rem 1.25rem; margin-bottom: 12px; }
-  .card-title { font-size: 11px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; font-family: var(--mono); }
-  .g2 { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
-  .g3 { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 10px; }
-  .g4 { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 10px; }
-  .metric { background: var(--bg3); border-radius: 10px; padding: 0.9rem 1rem; border: 1px solid var(--border); }
-  .mlabel { font-size: 10px; color: var(--text3); margin-bottom: 5px; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.05em; }
-  .mval { font-size: 19px; font-weight: 600; font-family: var(--mono); }
-  .msub { font-size: 10px; color: var(--text3); margin-top: 3px; }
-  .v-green { color: var(--green); } .v-red { color: var(--red); } .v-amber { color: var(--amber); } .v-accent { color: var(--accent); } .v-blue { color: var(--blue); }
-  .badge { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 10px; font-weight: 500; font-family: var(--mono); }
-  .b-red { background: rgba(255,94,94,0.15); color: var(--red); }
-  .b-amber { background: rgba(255,181,71,0.12); color: var(--amber); }
-  .b-green { background: rgba(94,255,160,0.1); color: var(--green); }
-  .b-blue { background: rgba(94,184,255,0.1); color: var(--blue); }
-  .b-accent { background: rgba(200,245,90,0.1); color: var(--accent); }
-  .b-gray { background: var(--bg4); color: var(--text2); }
-  .alert { border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; font-size: 13px; line-height: 1.6; border: 1px solid; }
-  .alert-red { background: rgba(255,94,94,0.07); border-color: rgba(255,94,94,0.2); color: #ffb0b0; }
-  .alert-amber { background: rgba(255,181,71,0.07); border-color: rgba(255,181,71,0.2); color: #ffd89a; }
-  .alert-green { background: rgba(94,255,160,0.07); border-color: rgba(94,255,160,0.2); color: #9affcc; }
-  .alert-accent { background: rgba(200,245,90,0.07); border-color: rgba(200,245,90,0.2); color: #d8f87a; }
-  .pb-wrap { height: 5px; border-radius: 3px; background: var(--bg4); overflow: hidden; margin-top: 5px; }
-  .pb-fill { height: 100%; border-radius: 3px; transition: width 0.4s; }
-  .row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
-  .row:last-child { border-bottom: none; }
-  .row-lbl { color: var(--text2); }
-  .row-val { font-family: var(--mono); font-weight: 500; }
-  .phase { border: 1px solid var(--border); border-radius: 10px; padding: 1rem; margin-bottom: 10px; }
-  .phase-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-  .phase-num { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; font-family: var(--mono); flex-shrink: 0; }
-  .prio-item { display: flex; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
-  .prio-item:last-child { border-bottom: none; }
-  .prio-n { width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; font-family: var(--mono); flex-shrink: 0; margin-top: 1px; }
-  .prio-name { font-size: 13px; font-weight: 500; }
-  .prio-desc { font-size: 11px; color: var(--text2); margin-top: 3px; line-height: 1.5; }
-  .strat-card { border-radius: 10px; padding: 1rem; border: 1px solid var(--border); background: var(--bg3); }
-  .sl-wrap { margin: 10px 0; }
-  .sl-lbl { display: flex; justify-content: space-between; font-size: 12px; color: var(--text2); margin-bottom: 5px; }
-  .sl-val { color: var(--accent); font-family: var(--mono); font-weight: 500; }
-  input[type=range] { width: 100%; accent-color: var(--accent); }
-  .chart-wrap { position: relative; width: 100%; }
-  .tl-item { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
-  .tl-item:last-child { border-bottom: none; }
-  .tl-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
-  .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 200; align-items: center; justify-content: center; padding: 1rem; }
-  .modal-bg.open { display: flex; }
-  .modal { background: var(--bg2); border: 1px solid var(--border2); border-radius: 14px; padding: 1.5rem; width: 100%; max-width: 400px; max-height: 90vh; overflow-y: auto; }
-  .modal h3 { font-size: 15px; font-weight: 600; margin-bottom: 16px; }
-  .field { margin-bottom: 11px; }
-  .field label { display: block; font-size: 10px; color: var(--text2); margin-bottom: 4px; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.04em; }
-  .field input, .field select { width: 100%; background: var(--bg3); border: 1px solid var(--border2); border-radius: 7px; padding: 8px 10px; color: var(--text); font-family: var(--mono); font-size: 13px; outline: none; }
-  .field input:focus, .field select:focus { border-color: var(--accent); }
-  .btn { padding: 8px 16px; border-radius: 7px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; font-family: var(--sans); transition: all 0.15s; }
-  .btn-primary { background: var(--accent); color: #111; }
-  .btn-primary:hover { background: var(--accent2); }
-  .btn-ghost { background: var(--bg4); color: var(--text2); border: 1px solid var(--border2); }
-  .btn-ghost:hover { color: var(--text); }
-  .btn-sm { padding: 4px 10px; font-size: 11px; border-radius: 5px; }
-  .btn-danger { background: rgba(255,94,94,0.12); color: var(--red); border: 1px solid rgba(255,94,94,0.2); }
-  .sep { height: 1px; background: var(--border); margin: 14px 0; }
-  /* Checklist */
-  .check-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); cursor: pointer; }
-  .check-item:last-child { border-bottom: none; }
-  .check-box { width: 20px; height: 20px; border-radius: 5px; border: 1px solid var(--border2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; }
-  .check-box.done { background: var(--accent); border-color: var(--accent); }
-  .check-box.done::after { content: '✓'; font-size: 12px; color: #111; font-weight: 700; }
-  .check-label { flex: 1; font-size: 13px; }
-  .check-label.done { text-decoration: line-through; color: var(--text3); }
-  .check-amount { font-family: var(--mono); font-size: 12px; color: var(--text2); }
-  .check-date { font-size: 11px; color: var(--text3); margin-top: 2px; }
-  @media(max-width:500px) { .g4{grid-template-columns:repeat(2,1fr);} .g3{grid-template-columns:repeat(2,1fr);} nav{padding:0 0.75rem;} .nav-tab{padding:5px 8px;font-size:11px;} .page{padding:1rem;} }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;}
+  nav{position:sticky;top:0;z-index:100;background:rgba(15,15,15,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 1.25rem;display:flex;align-items:center;height:52px;gap:8px;}
+  .nav-logo{font-family:var(--mono);font-size:12px;color:var(--accent);margin-right:auto;letter-spacing:0.04em;}
+  .nav-tabs{display:flex;gap:2px;}
+  .nav-tab{padding:5px 11px;border-radius:6px;font-size:12px;color:var(--text2);cursor:pointer;border:none;background:transparent;font-family:var(--sans);transition:all 0.15s;white-space:nowrap;}
+  .nav-tab:hover{color:var(--text);background:var(--bg3);}
+  .nav-tab.active{color:var(--accent);background:rgba(200,245,90,0.08);}
+  .page{display:none;padding:1.25rem;max-width:860px;margin:0 auto;animation:fi 0.2s ease;}
+  .page.active{display:block;}
+  @keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+  .card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.1rem 1.25rem;margin-bottom:12px;}
+  .card-title{font-size:11px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;font-family:var(--mono);}
+  .g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+  .g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;}
+  .metric{background:var(--bg3);border-radius:10px;padding:0.9rem 1rem;border:1px solid var(--border);}
+  .mlabel{font-size:10px;color:var(--text3);margin-bottom:5px;font-family:var(--mono);text-transform:uppercase;letter-spacing:0.05em;}
+  .mval{font-size:19px;font-weight:600;font-family:var(--mono);}
+  .msub{font-size:10px;color:var(--text3);margin-top:3px;}
+  .v-green{color:var(--green);}.v-red{color:var(--red);}.v-amber{color:var(--amber);}.v-accent{color:var(--accent);}.v-blue{color:var(--blue);}
+  .badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:500;font-family:var(--mono);}
+  .b-red{background:rgba(255,94,94,0.15);color:var(--red);}
+  .b-amber{background:rgba(255,181,71,0.12);color:var(--amber);}
+  .b-green{background:rgba(94,255,160,0.1);color:var(--green);}
+  .b-blue{background:rgba(94,184,255,0.1);color:var(--blue);}
+  .b-accent{background:rgba(200,245,90,0.1);color:var(--accent);}
+  .b-gray{background:var(--bg4);color:var(--text2);}
+  .alert{border-radius:8px;padding:10px 14px;margin-bottom:10px;font-size:13px;line-height:1.6;border:1px solid;}
+  .alert-red{background:rgba(255,94,94,0.07);border-color:rgba(255,94,94,0.2);color:#ffb0b0;}
+  .alert-amber{background:rgba(255,181,71,0.07);border-color:rgba(255,181,71,0.2);color:#ffd89a;}
+  .alert-green{background:rgba(94,255,160,0.07);border-color:rgba(94,255,160,0.2);color:#9affcc;}
+  .alert-accent{background:rgba(200,245,90,0.07);border-color:rgba(200,245,90,0.2);color:#d8f87a;}
+  .pb-wrap{height:5px;border-radius:3px;background:var(--bg4);overflow:hidden;margin-top:5px;}
+  .pb-fill{height:100%;border-radius:3px;transition:width 0.4s;}
+  .row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;}
+  .row:last-child{border-bottom:none;}
+  .strat-card{border-radius:10px;padding:1rem;border:1px solid var(--border);background:var(--bg3);}
+  .sl-wrap{margin:10px 0;}
+  .sl-lbl{display:flex;justify-content:space-between;font-size:12px;color:var(--text2);margin-bottom:5px;}
+  .sl-val{color:var(--accent);font-family:var(--mono);font-weight:500;}
+  input[type=range]{width:100%;accent-color:var(--accent);}
+  .chart-wrap{position:relative;width:100%;}
+  .tl-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);}
+  .tl-item:last-child{border-bottom:none;}
+  .tl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+  .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:200;align-items:center;justify-content:center;padding:1rem;}
+  .modal-bg.open{display:flex;}
+  .modal{background:var(--bg2);border:1px solid var(--border2);border-radius:14px;padding:1.5rem;width:100%;max-width:400px;max-height:90vh;overflow-y:auto;}
+  .modal h3{font-size:15px;font-weight:600;margin-bottom:16px;}
+  .field{margin-bottom:11px;}
+  .field label{display:block;font-size:10px;color:var(--text2);margin-bottom:4px;font-family:var(--mono);text-transform:uppercase;letter-spacing:0.04em;}
+  .field input,.field select{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:7px;padding:8px 10px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;}
+  .field input:focus,.field select:focus{border-color:var(--accent);}
+  .btn{padding:8px 16px;border-radius:7px;font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:var(--sans);transition:all 0.15s;}
+  .btn-primary{background:var(--accent);color:#111;}
+  .btn-primary:hover{background:var(--accent2);}
+  .btn-ghost{background:var(--bg4);color:var(--text2);border:1px solid var(--border2);}
+  .btn-ghost:hover{color:var(--text);}
+  .btn-sm{padding:4px 10px;font-size:11px;border-radius:5px;}
+  .btn-danger{background:rgba(255,94,94,0.12);color:var(--red);border:1px solid rgba(255,94,94,0.2);}
+  .sep{height:1px;background:var(--border);margin:14px 0;}
+  .check-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;}
+  .check-item:last-child{border-bottom:none;}
+  .check-box{width:20px;height:20px;border-radius:5px;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.15s;}
+  .check-box.done{background:var(--accent);border-color:var(--accent);}
+  .check-box.done::after{content:'✓';font-size:12px;color:#111;font-weight:700;}
+  .check-label{flex:1;font-size:13px;}
+  .check-label.done{text-decoration:line-through;color:var(--text3);}
+  .check-amount{font-family:var(--mono);font-size:12px;color:var(--text2);}
+  .check-date{font-size:11px;color:var(--text3);margin-top:2px;}
+  @media(max-width:500px){.g4{grid-template-columns:repeat(2,1fr);}nav{padding:0 0.75rem;}.nav-tab{padding:5px 8px;font-size:11px;}.page{padding:1rem;}}
 </style>
 </head>
 <body>
-
 <nav>
   <div class="nav-logo">deudas.app</div>
   <div class="nav-tabs">
     <button class="nav-tab active" onclick="showPage('resumen',this)">Resumen</button>
-    <button class="nav-tab" onclick="showPage('checklist',this)">Checklist</button>
+    <button class="nav-tab" onclick="showPage('checklist',this)">Abril</button>
     <button class="nav-tab" onclick="showPage('estrategia',this)">Estrategia</button>
     <button class="nav-tab" onclick="showPage('deudas',this)">Deudas</button>
   </div>
 </nav>
 
-<!-- RESUMEN -->
 <div id="page-resumen" class="page active">
   <div style="margin-bottom:1.25rem;">
     <div style="font-size:11px;font-family:var(--mono);color:var(--text3);margin-bottom:4px;" id="fecha-hoy"></div>
     <div style="font-size:22px;font-weight:600;">Panel de control</div>
-    <div style="font-size:13px;color:var(--text2);margin-top:2px;">Tu situación financiera actualizada</div>
+    <div style="font-size:13px;color:var(--text2);margin-top:2px;">Actualizado 17 abr 2026</div>
   </div>
   <div class="g4" style="margin-bottom:12px;" id="metrics-resumen"></div>
   <div class="card">
@@ -134,59 +120,36 @@
   </div>
 </div>
 
-<!-- CHECKLIST -->
 <div id="page-checklist" class="page">
   <div style="margin-bottom:1.25rem;">
-    <div style="font-size:22px;font-weight:600;">Checklist abril 2026</div>
+    <div style="font-size:22px;font-weight:600;">Plan abril 2026</div>
     <div style="font-size:13px;color:var(--text2);margin-top:2px;">Cesantías $2.000.000 · Salario día 30-31</div>
   </div>
-
-  <div class="alert alert-accent" style="margin-bottom:14px;">
-    <strong>Acuerdos firmados hoy 8 abr:</strong> ADDI refinanciado, BBVA TC1 y TC2 rediferidas a 24 meses, Sistecredito acuerdo $100.000.
+  <div class="alert alert-green" style="margin-bottom:14px;">
+    Semana crítica cerrada. ADDI refinanciado, BBVA C1 y Davivienda pagados, TC1/TC2 rediferidas, TUYA ampliada a 48 cuotas desde junio.
   </div>
-
   <div class="card">
-    <div class="card-title">Fase 1 — Con cesantías (antes del 15 abr)</div>
+    <div class="card-title">Pagado — cesantías</div>
     <div id="checks-fase1"></div>
     <div style="display:flex;justify-content:space-between;padding:10px 0 0;font-size:13px;font-weight:600;border-top:1px solid var(--border);margin-top:4px;">
-      <span style="color:var(--text2);">Usado de cesantías</span>
-      <span id="usado-ces" style="font-family:var(--mono);"></span>
-    </div>
-    <div style="display:flex;justify-content:space-between;padding:4px 0 0;font-size:13px;">
-      <span style="color:var(--text2);">Reserva hasta el 30</span>
-      <span id="reserva-ces" style="font-family:var(--mono);color:var(--accent);"></span>
+      <span style="color:var(--text2);">Disponible restante</span>
+      <span style="font-family:var(--mono);color:var(--accent);">~$44.564</span>
     </div>
   </div>
-
   <div class="card">
-    <div class="card-title">Fase 2 — Con salario día 30-31</div>
+    <div class="card-title">Pendiente — fin de abril</div>
     <div id="checks-fase2"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Con salario día 30-31</div>
+    <div id="checks-fase3"></div>
     <div style="display:flex;justify-content:space-between;padding:10px 0 0;font-size:13px;font-weight:600;border-top:1px solid var(--border);margin-top:4px;">
       <span style="color:var(--text2);">Sobrante estimado</span>
-      <span id="sobrante-sal" style="font-family:var(--mono);color:var(--accent);"></span>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Pendiente / En negociación</div>
-    <div class="prio-item">
-      <div class="prio-n" style="background:rgba(255,181,71,0.12);color:var(--amber);">!</div>
-      <div class="prio-body">
-        <div class="prio-name">TUYA, BBVA C2, NU, Codensa, Mamá</div>
-        <div class="prio-desc">Contáctalos antes de que venzan. Diles que pagas en mayo.</div>
-      </div>
-    </div>
-    <div class="prio-item">
-      <div class="prio-n" style="background:rgba(255,94,94,0.12);color:var(--red);">⚠</div>
-      <div class="prio-body">
-        <div class="prio-name">Sistecredito — créditos 6817 y 142</div>
-        <div class="prio-desc">$288.151 en mora. Atacar cuando liquides Hermanita y Nequi.</div>
-      </div>
+      <span style="font-family:var(--mono);color:var(--accent);">~$752.355</span>
     </div>
   </div>
 </div>
 
-<!-- ESTRATEGIA -->
 <div id="page-estrategia" class="page">
   <div style="margin-bottom:1.25rem;">
     <div style="font-size:22px;font-weight:600;">Motor de estrategia</div>
@@ -236,7 +199,6 @@
   </div>
 </div>
 
-<!-- DEUDAS -->
 <div id="page-deudas" class="page">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
     <div>
@@ -248,7 +210,6 @@
   <div id="debt-cards"></div>
 </div>
 
-<!-- MODAL -->
 <div class="modal-bg" id="modal">
   <div class="modal">
     <h3 id="modal-title">Agregar deuda</h3>
@@ -261,8 +222,8 @@
     <div class="field"><label>Estado</label>
       <select id="f-status">
         <option value="al_dia">Al día</option>
-        <option value="mora">En mora</option>
         <option value="acuerdo">Acuerdo de pago</option>
+        <option value="mora">En mora</option>
         <option value="familiar">Familiar (0%)</option>
         <option value="liquidada">Liquidada ✓</option>
       </select>
@@ -277,161 +238,123 @@
 </div>
 
 <script>
-const COLORS = ["#ff5e5e","#ffb547","#5eb8ff","#5effa0","#c8f55a","#f0997b","#ed93b1","#afa9ec","#5dcaa5","#85b7eb","#d85a30","#378add","#7f77dd","#1d9e75"];
+const COLORS=["#ff5e5e","#ffb547","#5eb8ff","#5effa0","#c8f55a","#f0997b","#ed93b1","#afa9ec","#5dcaa5","#85b7eb","#d85a30","#378add","#7f77dd","#1d9e75","#e24b4a","#ba7517"];
 
-function defaultDebts() {
-  return [
-    { name:"Moto (tía)",       balance:14394185, ea:16.07, minPay:321645, cut:"—",  status:"mora",     note:"2 meses sin pagar. Pagar 1 cuota el 30 abr.",           color:COLORS[0]  },
-    { name:"Codensa",          balance:1066988,  ea:20.00, minPay:55000,  cut:"30", status:"al_dia",   note:"Pagar fin de mes",                                      color:COLORS[1]  },
-    { name:"BBVA TC1", balance:2433557, ea:26.73, minPay:126794, cut:"14", status:"acuerdo", note:"Rediferido 24 meses. Sin cobro este mes — próxima cuota 14 may.", color:COLORS[2]  },
-    { name:"BBVA TC2", balance:1366264, ea:26.73, minPay:71186, cut:"15", status:"acuerdo", note:"Rediferido 24 meses. Sin cobro este mes — próxima cuota 15 may.", color:COLORS[3]  },
-    { name:"BBVA C1", balance:6304705, ea:24.98, minPay:192482, cut:"12", status:"al_dia", note:"Pagado 13 abr 91.981. Próximo vencimiento 12 may.", color:COLORS[4]  },
-    { name:"BBVA C2",          balance:3596347,  ea:24.33, minPay:114650, cut:"7",  status:"al_dia",   note:"Débito día 7",                                          color:COLORS[5]  },
-    { name:"TUYA (Alkosto MC)", balance:5104604, ea:25.49, minPay:243093, cut:"5", status:"acuerdo", note:"Ampliación 48 cuotas $243.093 — pendiente aprobación 3 días. Vence 5 may.", color:COLORS[6]  },
-    { name:"Davivienda", balance:13365906, ea:15.38, minPay:270000, cut:"13", status:"al_dia", note:"Pagado 13 abr 69.135. Próximo vencimiento 13 may.", color:COLORS[7]  },
-    { name:"ADDI", balance:2716436, ea:36.00, minPay:185725, cut:"14", status:"acuerdo", note:"Refinanciado. Primera cuota pagada 85.153 el 13 abr.", color:COLORS[8]  },
-    { name:"Hermanita",        balance:600000,   ea:0,     minPay:600000, cut:"30", status:"familiar", note:"Liquidar completa con salario del 30 abr.",             color:COLORS[9]  },
-    { name:"Mamá",             balance:3500000,  ea:0,     minPay:126000, cut:"30", status:"familiar", note:"2 cuotas pendientes. Avisar antes del 30.",             color:COLORS[10] },
-    { name:"Nequi",            balance:761605,   ea:18.00, minPay:39356,  cut:"30", status:"al_dia",   note:"23 cuotas restantes",                                   color:COLORS[11] },
-    { name:"Sistecredito 766", balance:1903549,  ea:28.00, minPay:100000, cut:"30", status:"mora",     note:"Acuerdo $100.000 el 30 abr. Crédito Hogar La Alquería.",color:COLORS[12] },
-    { name:"Sistecredito 6817",balance:288151,   ea:28.00, minPay:72169,  cut:"—",  status:"mora",     note:"Croydon Kennedy. Atacar después de Hermanita y Nequi.", color:COLORS[13] },
-    { name:"Sistecredito 142", balance:215982,   ea:28.00, minPay:50000,  cut:"—",  status:"mora",     note:"Go Rigo Go. Atacar segundo.",                           color:COLORS[0]  },
-    { name:"NU",               balance:3000000,  ea:43.29, minPay:126924, cut:"22", status:"al_dia",   note:"48 cuotas. Paga 22 may. Tasa más alta del portafolio.", color:COLORS[1]  },
-  ];
-}
+function defaultDebts(){return[
+  {name:"Moto (tía)",        balance:14394185, ea:16.07, minPay:321645, cut:"—",  status:"mora",    note:"2 meses sin pagar. Pagar 1 cuota el 30 abr con salario.",      color:COLORS[0]},
+  {name:"Codensa",           balance:1066988,  ea:20.00, minPay:261836, cut:"27", status:"al_dia",  note:"Pagar $261.836 el 27 abr. Último pago: mar 2026.",               color:COLORS[1]},
+  {name:"BBVA TC1",          balance:2433557,  ea:26.73, minPay:126794, cut:"14", status:"acuerdo", note:"Rediferido 24 meses. Sin cobro abril — próxima cuota 14 may.",   color:COLORS[2]},
+  {name:"BBVA TC2",          balance:1366264,  ea:26.73, minPay:71186,  cut:"15", status:"acuerdo", note:"Rediferido 24 meses. Sin cobro abril — próxima cuota 15 may.",   color:COLORS[3]},
+  {name:"BBVA C1",           balance:6368411,  ea:24.98, minPay:192482, cut:"12", status:"al_dia",  note:"Pagado 13 abr $191.981. Próxima cuota 12 may.",                  color:COLORS[4]},
+  {name:"BBVA C2",           balance:3508565,  ea:24.33, minPay:114650, cut:"7",  status:"al_dia",  note:"Débito automático día 7. Pagado 7 abr.",                          color:COLORS[5]},
+  {name:"TUYA (Alkosto MC)", balance:5104604,  ea:25.49, minPay:243093, cut:"9",  status:"acuerdo", note:"Ampliación 48 cuotas aprobada 13 abr. Primera cuota: corte 9 may. Sin cobro abril.", color:COLORS[6]},
+  {name:"Davivienda",        balance:13365906, ea:15.38, minPay:270000, cut:"13", status:"al_dia",  note:"Pagado 13 abr $269.135. Próxima cuota 13 may.",                  color:COLORS[7]},
+  {name:"ADDI",              balance:2716436,  ea:36.00, minPay:185725, cut:"14", status:"acuerdo", note:"Refinanciado. Pagadas: $130k (9 abr) + $185.153 (13 abr). Próxima: $185.140 hasta 14 may.", color:COLORS[8]},
+  {name:"Mamá",              balance:3500000,  ea:0,     minPay:126000, cut:"30", status:"familiar",note:"2 cuotas pendientes. Avisar antes del 30 abr. Pagar con salario.", color:COLORS[9]},
+  {name:"Nequi",             balance:761605,   ea:18.00, minPay:39356,  cut:"30", status:"al_dia",  note:"23 cuotas restantes. Pagar día 30 con salario.",                 color:COLORS[10]},
+  {name:"Sistecredito 766",  balance:1903549,  ea:28.00, minPay:100000, cut:"30", status:"mora",    note:"Acuerdo $100.000 el 30 abr. Hogar La Alquería.",                 color:COLORS[11]},
+  {name:"Sistecredito 6817", balance:288151,   ea:28.00, minPay:72169,  cut:"—",  status:"mora",    note:"Croydon Kennedy. Atacar después de Nequi.",                      color:COLORS[12]},
+  {name:"Sistecredito 142",  balance:215982,   ea:28.00, minPay:50000,  cut:"—",  status:"mora",    note:"Go Rigo Go. Atacar segundo.",                                     color:COLORS[13]},
+  {name:"NU",                balance:3000000,  ea:43.29, minPay:126924, cut:"22", status:"al_dia",  note:"48 cuotas. Próxima: 22 may. Tasa más alta del portafolio.",       color:COLORS[14]},
+  {name:"Hermanita",         balance:0,        ea:0,     minPay:0,      cut:"—",  status:"liquidada",note:"Liquidada 14 abr — $410.000 pagados. ✓",                       color:COLORS[15]},
+];}
 
-let DEBTS = JSON.parse(localStorage.getItem('deudas_v2') || 'null') || defaultDebts();
-function save() { localStorage.setItem('deudas_v2', JSON.stringify(DEBTS)); }
+let DEBTS=JSON.parse(localStorage.getItem('deudas_v3')||'null')||defaultDebts();
+function save(){localStorage.setItem('deudas_v3',JSON.stringify(DEBTS));}
+function eaToMv(ea){return Math.pow(1+ea/100,1/12)-1;}
+function fmt(n){return '$'+Math.round(n).toLocaleString('es-CO');}
+function fmtM(n){return '$'+(n/1000000).toFixed(2)+'M';}
 
-function eaToMv(ea) { return Math.pow(1+ea/100,1/12)-1; }
-function fmt(n) { return '$'+Math.round(n).toLocaleString('es-CO'); }
-function fmtM(n) { return '$'+(n/1000000).toFixed(2)+'M'; }
-
-// NAV
-function showPage(id, el) {
+function showPage(id,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
-  if(el) el.classList.add('active');
-  if(id==='resumen') renderResumen();
-  if(id==='checklist') renderChecklist();
-  if(id==='estrategia') updateStrat();
-  if(id==='deudas') renderDeudas();
+  if(el)el.classList.add('active');
+  if(id==='resumen')renderResumen();
+  if(id==='checklist')renderChecklist();
+  if(id==='estrategia')updateStrat();
+  if(id==='deudas')renderDeudas();
 }
 
-// RESUMEN
-function renderResumen() {
-  const active = DEBTS.filter(d=>d.status!=='liquidada');
-  const total = active.reduce((s,d)=>s+d.balance,0);
-  const intMes = active.reduce((s,d)=>s+d.balance*eaToMv(d.ea),0);
-  const minPay = active.reduce((s,d)=>s+d.minPay,0);
-  const moras = active.filter(d=>d.status==='mora').length;
-
-  document.getElementById('fecha-hoy').textContent = new Date().toLocaleDateString('es-CO',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  document.getElementById('metrics-resumen').innerHTML = `
+function renderResumen(){
+  const active=DEBTS.filter(d=>d.status!=='liquidada');
+  const total=active.reduce((s,d)=>s+d.balance,0);
+  const intMes=active.reduce((s,d)=>s+d.balance*eaToMv(d.ea),0);
+  const minPay=active.reduce((s,d)=>s+d.minPay,0);
+  const moras=active.filter(d=>d.status==='mora').length;
+  document.getElementById('fecha-hoy').textContent=new Date().toLocaleDateString('es-CO',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('metrics-resumen').innerHTML=`
     <div class="metric"><div class="mlabel">Deuda total</div><div class="mval v-red">${fmt(total)}</div><div class="msub">${active.length} activas</div></div>
     <div class="metric"><div class="mlabel">Interés/mes</div><div class="mval v-amber">${fmt(intMes)}</div><div class="msub">Costo puro</div></div>
     <div class="metric"><div class="mlabel">Cuotas totales</div><div class="mval">${fmt(minPay)}</div><div class="msub">Suma mínimos</div></div>
-    <div class="metric"><div class="mlabel">En mora</div><div class="mval ${moras>0?'v-red':'v-green'}">${moras}</div><div class="msub">Acción inmediata</div></div>
-  `;
-
-  const sorted = [...active].filter(d=>d.ea>0).sort((a,b)=>(b.balance*eaToMv(b.ea))-(a.balance*eaToMv(a.ea)));
-  const totalI = active.reduce((s,d)=>s+d.balance*eaToMv(d.ea),0);
-  document.getElementById('interest-list').innerHTML = sorted.map(d=>{
-    const i = d.balance*eaToMv(d.ea);
-    const pct = (i/totalI*100);
-    return `<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);">
+    <div class="metric"><div class="mlabel">En mora</div><div class="mval ${moras>0?'v-red':'v-green'}">${moras}</div><div class="msub">Sistecredito x3</div></div>`;
+  const sorted=[...active].filter(d=>d.ea>0).sort((a,b)=>(b.balance*eaToMv(b.ea))-(a.balance*eaToMv(a.ea)));
+  const totalI=active.reduce((s,d)=>s+d.balance*eaToMv(d.ea),0);
+  document.getElementById('interest-list').innerHTML=sorted.map(d=>{
+    const i=d.balance*eaToMv(d.ea);const pct=(i/totalI*100);
+    return`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);">
       <div style="width:7px;height:7px;border-radius:50%;background:${d.color};flex-shrink:0;"></div>
       <div style="flex:1;font-size:12px;color:var(--text2);">${d.name}</div>
       <div style="font-size:11px;color:var(--text3);font-family:var(--mono);min-width:45px;text-align:right;">${d.ea.toFixed(1)}%</div>
       <div style="font-size:12px;font-family:var(--mono);font-weight:500;min-width:78px;text-align:right;color:var(--red);">${fmt(i)}</div>
-      <div style="min-width:55px;">
-        <div class="pb-wrap"><div class="pb-fill" style="background:${d.color};width:${Math.min(100,pct*3)}%;"></div></div>
-        <div style="font-size:10px;color:var(--text3);margin-top:2px;font-family:var(--mono);">${pct.toFixed(1)}%</div>
-      </div>
-    </div>`;
+      <div style="min-width:55px;"><div class="pb-wrap"><div class="pb-fill" style="background:${d.color};width:${Math.min(100,pct*3)}%;"></div></div>
+      <div style="font-size:10px;color:var(--text3);margin-top:2px;font-family:var(--mono);">${pct.toFixed(1)}%</div></div></div>`;
   }).join('');
-  document.getElementById('total-int').textContent = fmt(totalI);
-
-  const existingPie = Chart.getChart('chartPie');
-  if(existingPie) existingPie.destroy();
-  new Chart(document.getElementById('chartPie'),{
-    type:'doughnut',
-    data:{ labels:active.map(d=>d.name), datasets:[{data:active.map(d=>d.balance),backgroundColor:active.map(d=>d.color),borderColor:'#161616',borderWidth:2}] },
-    options:{ responsive:true,maintainAspectRatio:false, plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.label}: ${fmt(c.parsed)}`}}}, cutout:'65%' }
-  });
+  document.getElementById('total-int').textContent=fmt(totalI);
+  const ep=Chart.getChart('chartPie');if(ep)ep.destroy();
+  new Chart(document.getElementById('chartPie'),{type:'doughnut',
+    data:{labels:active.map(d=>d.name),datasets:[{data:active.map(d=>d.balance),backgroundColor:active.map(d=>d.color),borderColor:'#161616',borderWidth:2}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.label}: ${fmt(c.parsed)}`}}},cutout:'65%'}});
 }
 
-// CHECKLIST
-const FASE1 = [
-  { id:'c1', label:'Impuesto moto',           amount:166700,  date:'Hoy',   key:'imp_moto'  },
-  { id:'c2', label:'Impuesto carro',           amount:161000,  date:'Hoy',   key:'imp_carro' },
-  { id:'c3', label:'ADDI — activar acuerdo',   amount:130000,  date:'9 abr', key:'addi_act'  },
-  { id:'c4', label:'BBVA C1 mínimo',           amount:192482,  date:'12 abr',key:'bbva_c1'   },
-  { id:'c5', label:'Davivienda',               amount:270000,  date:'13 abr',key:'davivienda'},
-  { id:'c6', label:'BBVA TC1 primera cuota',   amount:126794,  date:'14 abr',key:'tc1'       },
-  { id:'c7', label:'BBVA TC2 primera cuota',   amount:71186,   date:'15 abr',key:'tc2'       },
+const FASE1=[
+  {label:'ADDI activación',         amount:130000,  date:'9 abr',  key:'addi0'},
+  {label:'Impuesto carro',           amount:161000,  date:'9 abr',  key:'icarro'},
+  {label:'Impuesto moto',            amount:166700,  date:'14 abr', key:'imoto'},
+  {label:'BBVA C1',                  amount:191981,  date:'13 abr', key:'c1'},
+  {label:'Davivienda',               amount:269135,  date:'13 abr', key:'davi'},
+  {label:'ADDI primera cuota',       amount:185153,  date:'13 abr', key:'addi1'},
+  {label:'Hermanita — liquidada',    amount:410000,  date:'14 abr', key:'hermana'},
 ];
-const FASE2 = [
-  { id:'c8',  label:'Mercado',                  amount:250000,  date:'30 abr',key:'mercado'   },
-  { id:'c9',  label:'Internet UNE',             amount:150000,  date:'30 abr',key:'internet'  },
-  { id:'c10', label:'Tía — 1 cuota moto',       amount:321645,  date:'30 abr',key:'tia'       },
-  { id:'c11', label:'Hermanita — liquidar',      amount:600000,  date:'30 abr',key:'hermana'   },
-  { id:'c12', label:'Sistecredito 766 acuerdo',  amount:100000,  date:'30 abr',key:'siste'     },
+const FASE2=[
+  {label:'Codensa',                  amount:261836,  date:'27 abr', key:'codensa'},
+  {label:'Sistecredito 766',         amount:100000,  date:'30 abr', key:'siste'},
+];
+const FASE3=[
+  {label:'Mercado',                  amount:250000,  date:'30 abr', key:'mercado'},
+  {label:'Internet UNE',             amount:150000,  date:'30 abr', key:'internet'},
+  {label:'Tía — 1 cuota moto',       amount:321645,  date:'30 abr', key:'tia'},
+  {label:'Mamá — 1 cuota',           amount:126000,  date:'30 abr', key:'mama'},
+  {label:'Nequi',                    amount:39356,   date:'30 abr', key:'nequi'},
 ];
 
-function getChecks() { return JSON.parse(localStorage.getItem('checks_v2')||'{}'); }
-function saveChecks(c) { localStorage.setItem('checks_v2', JSON.stringify(c)); }
+function getChecks(){return JSON.parse(localStorage.getItem('checks_v3')||'{}');}
+function saveChecks(c){localStorage.setItem('checks_v3',JSON.stringify(c));}
+function toggleCheck(key){const c=getChecks();c[key]=!c[key];saveChecks(c);renderChecklist();}
 
-function toggleCheck(key) {
-  const c = getChecks();
-  c[key] = !c[key];
-  saveChecks(c);
-  renderChecklist();
-}
-
-function renderChecklist() {
-  const c = getChecks();
-  const renderItems = (items) => items.map(item => `
+function renderChecklist(){
+  const c=getChecks();
+  const ri=items=>items.map(item=>`
     <div class="check-item" onclick="toggleCheck('${item.key}')">
       <div class="check-box ${c[item.key]?'done':''}"></div>
-      <div style="flex:1;">
-        <div class="check-label ${c[item.key]?'done':''}">${item.label}</div>
-        <div class="check-date">${item.date}</div>
-      </div>
+      <div style="flex:1;"><div class="check-label ${c[item.key]?'done':''}">${item.label}</div><div class="check-date">${item.date}</div></div>
       <div class="check-amount" style="${c[item.key]?'text-decoration:line-through;color:var(--text3);':''}">${fmt(item.amount)}</div>
-    </div>
-  `).join('');
-
-  document.getElementById('checks-fase1').innerHTML = renderItems(FASE1);
-  document.getElementById('checks-fase2').innerHTML = renderItems(FASE2);
-
-  const usadoCes = FASE1.filter(i=>c[i.key]).reduce((s,i)=>s+i.amount,0);
-  const totalFase1 = FASE1.reduce((s,i)=>s+i.amount,0);
-  const reserva = 2000000 - totalFase1;
-  document.getElementById('usado-ces').textContent = fmt(usadoCes) + ' / $2.000.000';
-  document.getElementById('usado-ces').style.color = usadoCes > 2000000 ? 'var(--red)' : 'var(--accent)';
-  document.getElementById('reserva-ces').textContent = fmt(reserva);
-
-  const usadoSal = FASE2.filter(i=>c[i.key]).reduce((s,i)=>s+i.amount,0);
-  const totalFase2 = FASE2.reduce((s,i)=>s+i.amount,0);
-  const sobrante = 1700000 - totalFase2;
-  document.getElementById('sobrante-sal').textContent = fmt(sobrante);
-  document.getElementById('sobrante-sal').style.color = sobrante >= 0 ? 'var(--accent)' : 'var(--red)';
+    </div>`).join('');
+  document.getElementById('checks-fase1').innerHTML=ri(FASE1);
+  document.getElementById('checks-fase2').innerHTML=ri(FASE2);
+  document.getElementById('checks-fase3').innerHTML=ri(FASE3);
 }
 
-// ESTRATEGIA
-function computeStrat(debts, extra, order) {
-  let q = debts.filter(d=>d.status!=='liquidada').map(d=>({...d,bal:d.balance}));
-  if(order==='avalanche') q.sort((a,b)=>b.ea-a.ea);
-  else q.sort((a,b)=>a.balance-b.balance);
-  let month=0,totalInt=0; const balH=[],intH=[];
+function computeStrat(debts,extra,order){
+  let q=debts.filter(d=>d.status!=='liquidada').map(d=>({...d,bal:d.balance}));
+  if(order==='avalanche')q.sort((a,b)=>b.ea-a.ea);else q.sort((a,b)=>a.balance-b.balance);
+  let month=0,totalInt=0;const balH=[],intH=[];
   while(q.some(d=>d.bal>0)&&month<360){
     month++;
     q.forEach(d=>{if(d.bal<=0)return;const i=d.bal*eaToMv(d.ea);totalInt+=i;d.bal+=i;});
     q.forEach(d=>{if(d.bal<=0)return;const p=Math.min(d.bal,d.minPay);d.bal-=p;if(d.bal<0)d.bal=0;});
-    let ex=extra; for(let i=0;i<q.length&&ex>0;i++){if(q[i].bal>0){const p=Math.min(q[i].bal,ex);q[i].bal-=p;ex-=p;if(q[i].bal<0)q[i].bal=0;}}
-    balH.push(q.reduce((s,d)=>s+d.bal,0)); intH.push(totalInt);
+    let ex=extra;for(let i=0;i<q.length&&ex>0;i++){if(q[i].bal>0){const p=Math.min(q[i].bal,ex);q[i].bal-=p;ex-=p;if(q[i].bal<0)q[i].bal=0;}}
+    balH.push(q.reduce((s,d)=>s+d.bal,0));intH.push(totalInt);
   }
   return{months:month,totalInt,balH,intH};
 }
@@ -459,8 +382,7 @@ function updateStrat(){
   document.getElementById('av-i').textContent=fmtM(av.totalInt);
   document.getElementById('sb-m').textContent=`${sbY>0?sbY+'a ':''} ${sbM}m`;
   document.getElementById('sb-i').textContent=fmtM(sb.totalInt);
-  const avSav=mn.totalInt-av.totalInt;
-  const sbSav=mn.totalInt-sb.totalInt;
+  const avSav=mn.totalInt-av.totalInt;const sbSav=mn.totalInt-sb.totalInt;
   document.getElementById('av-s').textContent=avSav>0?`Ahorras ${fmtM(avSav)}`:'';
   document.getElementById('sb-s').textContent=sbSav>0?`Ahorras ${fmtM(sbSav)}`:'';
   const mxM=mn.months;
@@ -470,19 +392,15 @@ function updateStrat(){
   const pad=(a,l)=>{const o=[...a];while(o.length<l)o.push(0);return o;};
   const labels=Array.from({length:maxLen},(_,i)=>i%6===0?`M${i}`:'');
   if(chartBal)chartBal.destroy();
-  chartBal=new Chart(document.getElementById('chartBal'),{
-    type:'line',
+  chartBal=new Chart(document.getElementById('chartBal'),{type:'line',
     data:{labels,datasets:[
       {label:'Avalancha',data:pad(av.balH,maxLen),borderColor:'#5eb8ff',backgroundColor:'rgba(94,184,255,0.05)',fill:true,tension:0.4,pointRadius:0,borderWidth:2},
       {label:'Bola de nieve',data:pad(sb.balH,maxLen),borderColor:'#5effa0',backgroundColor:'rgba(94,255,160,0.04)',fill:true,tension:0.4,pointRadius:0,borderWidth:2},
-      {label:'Solo mínimos',data:pad(mn.balH,maxLen),borderColor:'#444',fill:false,tension:0.4,pointRadius:0,borderWidth:1.5,borderDash:[4,3]}
-    ]},
+      {label:'Solo mínimos',data:pad(mn.balH,maxLen),borderColor:'#444',fill:false,tension:0.4,pointRadius:0,borderWidth:1.5,borderDash:[4,3]}]},
     options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
       plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmt(c.parsed.y)}`}}},
       scales:{x:{ticks:{color:'#555',font:{size:10},autoSkip:false},grid:{color:'rgba(255,255,255,0.04)'}},
-              y:{ticks:{color:'#555',font:{size:10},callback:v=>'$'+(v/1000000).toFixed(1)+'M'},grid:{color:'rgba(255,255,255,0.04)'}}}}
-  });
-  // Milestones
+              y:{ticks:{color:'#555',font:{size:10},callback:v=>'$'+(v/1000000).toFixed(1)+'M'},grid:{color:'rgba(255,255,255,0.04)'}}}}});
   let q2=[...DEBTS].filter(d=>d.status!=='liquidada').map(d=>({...d,bal:d.balance})).sort((a,b)=>b.ea-a.ea);
   const events=[],cleared=new Set();let mo=0;
   while(q2.some(d=>d.bal>0)&&mo<360){
@@ -495,20 +413,19 @@ function updateStrat(){
   document.getElementById('milestones').innerHTML=events.map(e=>{
     const yr=Math.floor(e.month/12),mo2=e.month%12;
     const lbl=yr>0?`${yr}a ${mo2>0?mo2+'m':''}`:`${mo2} meses`;
-    return `<div class="tl-item"><div class="tl-dot" style="background:${e.color}"></div>
+    return`<div class="tl-item"><div class="tl-dot" style="background:${e.color}"></div>
       <div><div style="font-size:13px;font-weight:500;">${e.name}</div>
       <div style="font-size:11px;color:var(--text3);">Mes ${e.month} · ${lbl}</div></div></div>`;
-  }).join('')||'<div style="font-size:13px;color:var(--text3);padding:8px 0;">Aumenta el abono extra para ver proyección.</div>';
+  }).join('')||'<div style="font-size:13px;color:var(--text3);padding:8px 0;">Ajusta el abono extra para ver proyección.</div>';
 }
 
-// DEUDAS
 function renderDeudas(){
   const total=DEBTS.filter(d=>d.status!=='liquidada').reduce((s,d)=>s+d.balance,0);
   document.getElementById('debt-count').textContent=`${DEBTS.length} deudas · ${fmt(total)}`;
   const statusMap={mora:'b-red',al_dia:'b-green',acuerdo:'b-blue',familiar:'b-accent',liquidada:'b-gray'};
   const statusLabel={mora:'mora',al_dia:'al día',acuerdo:'acuerdo',familiar:'familiar',liquidada:'liquidada ✓'};
   document.getElementById('debt-cards').innerHTML=DEBTS.map((d,i)=>`
-    <div class="card" style="border-left:2px solid ${d.color};${d.status==='liquidada'?'opacity:0.5;':''}">
+    <div class="card" style="border-left:2px solid ${d.color};${d.status==='liquidada'?'opacity:0.4;':''}">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
         <div style="flex:1;">
           <div style="font-size:14px;font-weight:600;">${d.name} <span class="badge ${statusMap[d.status]}">${statusLabel[d.status]}</span></div>
@@ -516,7 +433,7 @@ function renderDeudas(){
         </div>
         <button class="btn btn-ghost btn-sm" onclick="openEdit(${i})">Editar</button>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;">
+      ${d.status!=='liquidada'?`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;">
         <div><div style="font-size:10px;color:var(--text3);font-family:var(--mono);">SALDO</div><div style="font-size:13px;font-weight:600;font-family:var(--mono);margin-top:3px;">${fmt(d.balance)}</div></div>
         <div><div style="font-size:10px;color:var(--text3);font-family:var(--mono);">TASA EA</div><div style="font-size:13px;font-weight:600;font-family:var(--mono);margin-top:3px;color:${d.ea>=35?'var(--red)':d.ea>=20?'var(--amber)':'var(--green)'};">${d.ea>0?d.ea.toFixed(2)+'%':'0%'}</div></div>
         <div><div style="font-size:10px;color:var(--text3);font-family:var(--mono);">CUOTA</div><div style="font-size:13px;font-weight:600;font-family:var(--mono);margin-top:3px;">${fmt(d.minPay)}</div></div>
@@ -525,11 +442,9 @@ function renderDeudas(){
         <span>MV ${(eaToMv(d.ea)*100).toFixed(3)}%</span>
         <span>Int/mes: <span style="color:var(--red);">${fmt(d.balance*eaToMv(d.ea))}</span></span>
         <span>Corte: ${d.cut}</span>
-      </div>`:''}
-    </div>`).join('');
+      </div>`:''}`:''}</div>`).join('');
 }
 
-// MODAL
 function openAdd(){
   document.getElementById('modal-title').textContent='Agregar deuda';
   document.getElementById('edit-idx').value=-1;
@@ -552,7 +467,7 @@ function openEdit(i){
   document.getElementById('f-note').value=d.note;
   document.getElementById('modal').classList.add('open');
 }
-function closeModal(){ document.getElementById('modal').classList.remove('open'); }
+function closeModal(){document.getElementById('modal').classList.remove('open');}
 function saveDebt(){
   const idx=parseInt(document.getElementById('edit-idx').value);
   const status=document.getElementById('f-status').value;
@@ -565,14 +480,20 @@ function saveDebt(){
     status,note:document.getElementById('f-note').value,
     color:idx>=0?DEBTS[idx].color:COLORS[DEBTS.length%COLORS.length]
   };
-  if(idx>=0)DEBTS[idx]=entry; else DEBTS.push(entry);
-  save(); closeModal(); renderDeudas();
+  if(idx>=0)DEBTS[idx]=entry;else DEBTS.push(entry);
+  save();closeModal();renderDeudas();
 }
 function deleteDebt(){
   const idx=parseInt(document.getElementById('edit-idx').value);
   if(confirm(`¿Eliminar "${DEBTS[idx].name}"?`)){DEBTS.splice(idx,1);save();closeModal();renderDeudas();}
 }
 document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+
+// Pre-marcar pagos ya hechos
+const preChecked={addi0:true,icarro:true,imoto:true,c1:true,davi:true,addi1:true,hermana:true};
+const existing=JSON.parse(localStorage.getItem('checks_v3')||'{}');
+const merged=Object.assign(preChecked,existing);
+localStorage.setItem('checks_v3',JSON.stringify(merged));
 
 renderResumen();
 </script>
