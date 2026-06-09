@@ -7,18 +7,11 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
-  :root {
-    --bg:#0f0f0f;--bg2:#161616;--bg3:#1e1e1e;--bg4:#252525;
-    --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
-    --text:#f0f0f0;--text2:#888;--text3:#555;
-    --accent:#c8f55a;--accent2:#8fde45;
-    --red:#ff5e5e;--amber:#ffb547;--blue:#5eb8ff;--green:#5effa0;
-    --mono:'DM Mono',monospace;--sans:'Sora',sans-serif;
-  }
+  :root{--bg:#0f0f0f;--bg2:#161616;--bg3:#1e1e1e;--bg4:#252525;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--text:#f0f0f0;--text2:#888;--text3:#555;--accent:#c8f55a;--accent2:#8fde45;--red:#ff5e5e;--amber:#ffb547;--blue:#5eb8ff;--green:#5effa0;--mono:'DM Mono',monospace;--sans:'Sora',sans-serif;}
   *{box-sizing:border-box;margin:0;padding:0;}
   body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;}
-  nav{position:sticky;top:0;z-index:100;background:rgba(15,15,15,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 1.25rem;display:flex;align-items:center;height:52px;gap:8px;}
-  .nav-logo{font-family:var(--mono);font-size:12px;color:var(--accent);margin-right:auto;letter-spacing:0.04em;}
+  nav{position:sticky;top:0;z-index:100;background:rgba(15,15,15,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 1.25rem;display:flex;align-items:center;height:52px;gap:8px;overflow-x:auto;}
+  .nav-logo{font-family:var(--mono);font-size:12px;color:var(--accent);margin-right:auto;letter-spacing:0.04em;white-space:nowrap;}
   .nav-tabs{display:flex;gap:2px;}
   .nav-tab{padding:5px 11px;border-radius:6px;font-size:12px;color:var(--text2);cursor:pointer;border:none;background:transparent;font-family:var(--sans);transition:all 0.15s;white-space:nowrap;}
   .nav-tab:hover{color:var(--text);background:var(--bg3);}
@@ -47,6 +40,7 @@
   .alert-amber{background:rgba(255,181,71,0.07);border-color:rgba(255,181,71,0.2);color:#ffd89a;}
   .alert-green{background:rgba(94,255,160,0.07);border-color:rgba(94,255,160,0.2);color:#9affcc;}
   .alert-accent{background:rgba(200,245,90,0.07);border-color:rgba(200,245,90,0.2);color:#d8f87a;}
+  .alert-blue{background:rgba(94,184,255,0.07);border-color:rgba(94,184,255,0.2);color:#a8d6ff;}
   .pb-wrap{height:5px;border-radius:3px;background:var(--bg4);overflow:hidden;margin-top:5px;}
   .pb-fill{height:100%;border-radius:3px;transition:width 0.4s;}
   .row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;}
@@ -75,16 +69,11 @@
   .btn-ghost:hover{color:var(--text);}
   .btn-sm{padding:4px 10px;font-size:11px;border-radius:5px;}
   .btn-danger{background:rgba(255,94,94,0.12);color:var(--red);border:1px solid rgba(255,94,94,0.2);}
-  .sep{height:1px;background:var(--border);margin:14px 0;}
-  .check-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;}
-  .check-item:last-child{border-bottom:none;}
-  .check-box{width:20px;height:20px;border-radius:5px;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.15s;}
-  .check-box.done{background:var(--accent);border-color:var(--accent);}
-  .check-box.done::after{content:'✓';font-size:12px;color:#111;font-weight:700;}
-  .check-label{flex:1;font-size:13px;}
-  .check-label.done{text-decoration:line-through;color:var(--text3);}
-  .check-amount{font-family:var(--mono);font-size:12px;color:var(--text2);}
-  .check-date{font-size:11px;color:var(--text3);margin-top:2px;}
+  .month-card{background:var(--bg3);border-radius:10px;padding:1rem;margin-bottom:10px;border-left:3px solid var(--border2);}
+  .month-card.current{border-left-color:var(--accent);}
+  .month-card.future{border-left-color:var(--blue);}
+  .month-title{font-size:14px;font-weight:600;margin-bottom:8px;}
+  .month-sub{font-size:11px;color:var(--text2);margin-bottom:10px;font-family:var(--mono);}
   @media(max-width:500px){.g4{grid-template-columns:repeat(2,1fr);}nav{padding:0 0.75rem;}.nav-tab{padding:5px 8px;font-size:11px;}.page{padding:1rem;}}
 </style>
 </head>
@@ -93,7 +82,7 @@
   <div class="nav-logo">deudas.app</div>
   <div class="nav-tabs">
     <button class="nav-tab active" onclick="showPage('resumen',this)">Resumen</button>
-    <button class="nav-tab" onclick="showPage('checklist',this)">Abril</button>
+    <button class="nav-tab" onclick="showPage('plan',this)">Plan</button>
     <button class="nav-tab" onclick="showPage('estrategia',this)">Estrategia</button>
     <button class="nav-tab" onclick="showPage('deudas',this)">Deudas</button>
   </div>
@@ -103,7 +92,10 @@
   <div style="margin-bottom:1.25rem;">
     <div style="font-size:11px;font-family:var(--mono);color:var(--text3);margin-bottom:4px;" id="fecha-hoy"></div>
     <div style="font-size:22px;font-weight:600;">Panel de control</div>
-    <div style="font-size:13px;color:var(--text2);margin-top:2px;">Actualizado 17 abr 2026</div>
+    <div style="font-size:13px;color:var(--text2);margin-top:2px;">Nuevo empleo Deloitte · primer pago 25 jun</div>
+  </div>
+  <div class="alert alert-blue">
+    <strong>Cambio de empleo:</strong> Inicias en Deloitte el 21 mayo. Salario bruto $4.309.000 · neto ~$3.964.280. Primer pago: 25 junio.
   </div>
   <div class="g4" style="margin-bottom:12px;" id="metrics-resumen"></div>
   <div class="card">
@@ -120,32 +112,85 @@
   </div>
 </div>
 
-<div id="page-checklist" class="page">
+<div id="page-plan" class="page">
   <div style="margin-bottom:1.25rem;">
-    <div style="font-size:22px;font-weight:600;">Plan abril 2026</div>
-    <div style="font-size:13px;color:var(--text2);margin-top:2px;">Cesantías $2.000.000 · Salario día 30-31</div>
+    <div style="font-size:22px;font-weight:600;">Plan próximos meses</div>
+    <div style="font-size:13px;color:var(--text2);margin-top:2px;">Hasta agosto 2026</div>
   </div>
-  <div class="alert alert-green" style="margin-bottom:14px;">
-    Semana crítica cerrada. ADDI refinanciado, BBVA C1 y Davivienda pagados, TC1/TC2 rediferidas, TUYA ampliada a 48 cuotas desde junio.
-  </div>
-  <div class="card">
-    <div class="card-title">Pagado — cesantías</div>
-    <div id="checks-fase1"></div>
-    <div style="display:flex;justify-content:space-between;padding:10px 0 0;font-size:13px;font-weight:600;border-top:1px solid var(--border);margin-top:4px;">
-      <span style="color:var(--text2);">Disponible restante</span>
-      <span style="font-family:var(--mono);color:var(--accent);">~$44.564</span>
+
+  <div class="month-card current">
+    <div class="month-title">📅 Mayo (hasta 24 jun) — Sobrevivencia</div>
+    <div class="month-sub">Disponible: $900.000 ($700k José + $200k cobro)</div>
+    <div class="row"><span style="color:var(--text2);">Codensa TC</span><span style="font-family:var(--mono);">$294.008</span></div>
+    <div class="row"><span style="color:var(--text2);">Energía + aseo</span><span style="font-family:var(--mono);">$80.000</span></div>
+    <div class="row"><span style="color:var(--text2);">Internet UNE</span><span style="font-family:var(--mono);">$150.000</span></div>
+    <div class="row"><span style="color:var(--text2);">TUYA</span><span style="font-family:var(--mono);">$243.093</span></div>
+    <div class="row" style="font-weight:600;color:var(--amber);"><span>Subtotal pagos</span><span style="font-family:var(--mono);">$767.101</span></div>
+    <div class="row" style="font-weight:600;color:var(--accent);"><span>Para vivir 35 días</span><span style="font-family:var(--mono);">$132.899</span></div>
+    <div class="alert alert-red" style="margin-top:10px;margin-bottom:0;font-size:12px;">
+      Quedan en mora: Davivienda, BBVA C1/C2/TC1/TC2, ADDI, Nequi, NU, Mamá, Tía, Hermana, Sistecredito.
     </div>
   </div>
-  <div class="card">
-    <div class="card-title">Pendiente — fin de abril</div>
-    <div id="checks-fase2"></div>
+
+  <div class="month-card future">
+    <div class="month-title">💰 25 Junio — Primer salario Deloitte</div>
+    <div class="month-sub">Ingreso neto: $3.964.280</div>
+    <div class="row"><span style="color:var(--text2);">Vida básica</span><span style="font-family:var(--mono);">$630.000</span></div>
+    <div class="row"><span style="color:var(--text2);">Devolver a José</span><span style="font-family:var(--mono);">$700.000</span></div>
+    <div class="row"><span style="color:var(--text2);">Tía — 2 cuotas</span><span style="font-family:var(--mono);">$643.290</span></div>
+    <div class="row"><span style="color:var(--text2);">Mamá — 1 cuota</span><span style="font-family:var(--mono);">$126.000</span></div>
+    <div class="row"><span style="color:var(--text2);">Cuotas bancarias corrientes</span><span style="font-family:var(--mono);">~$1.570.210</span></div>
+    <div class="row" style="font-weight:600;color:var(--amber);"><span>Subtotal</span><span style="font-family:var(--mono);">$3.669.500</span></div>
+    <div class="row" style="font-weight:600;color:var(--accent);"><span>Abono Hermana</span><span style="font-family:var(--mono);">$294.780</span></div>
   </div>
+
+  <div class="month-card future">
+    <div class="month-title">📆 25 Julio — Segundo salario</div>
+    <div class="month-sub">Ingreso neto: $3.964.280</div>
+    <div class="row"><span style="color:var(--text2);">Vida básica</span><span style="font-family:var(--mono);">$630.000</span></div>
+    <div class="row"><span style="color:var(--text2);">Tía — 2 cuotas</span><span style="font-family:var(--mono);">$643.290</span></div>
+    <div class="row"><span style="color:var(--text2);">Mamá — 1 cuota</span><span style="font-family:var(--mono);">$126.000</span></div>
+    <div class="row"><span style="color:var(--text2);">Hermana — liquidar resto</span><span style="font-family:var(--mono);">$55.220</span></div>
+    <div class="row"><span style="color:var(--text2);">Cuotas bancarias corrientes</span><span style="font-family:var(--mono);">~$1.570.210</span></div>
+    <div class="row" style="font-weight:600;color:var(--amber);"><span>Subtotal</span><span style="font-family:var(--mono);">$3.024.720</span></div>
+    <div class="row" style="font-weight:600;color:var(--accent);"><span>Para moras mayo + Sistecredito</span><span style="font-family:var(--mono);">~$939.560</span></div>
+  </div>
+
+  <div class="month-card future">
+    <div class="month-title">🚀 25 Agosto — Acelerar</div>
+    <div class="month-sub">Sin José, sin Hermana. Tía cuotas 1+2</div>
+    <div class="row" style="font-weight:600;color:var(--accent);"><span>Sobrante para ataque avalancha</span><span style="font-family:var(--mono);">~$1.500.000</span></div>
+    <div class="alert alert-accent" style="margin-top:10px;margin-bottom:0;font-size:12px;">
+      Desde agosto, atacar NU (43% EA) agresivamente con estrategia avalancha.
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px;">
+    <div class="card-title">Sistecredito — Refinanciación</div>
+    <div class="alert alert-green" style="margin-bottom:0;">
+      <strong>$3.204.050 en 6 cuotas de $534.050 sin interés.</strong> Jul 5 → Dic 5 2026. Los 3 créditos unificados. Al día desde la aceptación.
+    </div>
+  </div>
+
   <div class="card">
-    <div class="card-title">Con salario día 30-31</div>
-    <div id="checks-fase3"></div>
-    <div style="display:flex;justify-content:space-between;padding:10px 0 0;font-size:13px;font-weight:600;border-top:1px solid var(--border);margin-top:4px;">
-      <span style="color:var(--text2);">Sobrante estimado</span>
-      <span style="font-family:var(--mono);color:var(--accent);">~$752.355</span>
+    <div class="card-title">Proyección de salida — 2 escenarios</div>
+    <div style="font-size:13px;color:var(--text2);margin-bottom:12px;line-height:1.6;">Con $500.000 extra/mes desde enero 2027 (al terminar Sistecredito):</div>
+    <div class="g2">
+      <div class="strat-card" style="border-left:2px solid var(--text3);">
+        <div style="font-size:11px;font-weight:500;color:var(--text2);text-transform:uppercase;font-family:var(--mono);margin-bottom:8px;">Sin primas (navidad)</div>
+        <div style="font-size:22px;font-weight:600;font-family:var(--mono);">4a 4m</div>
+        <div style="font-size:10px;color:var(--text3);margin-bottom:6px;">52 meses</div>
+        <div style="font-size:13px;font-family:var(--mono);color:var(--red);">$18.4M intereses</div>
+      </div>
+      <div class="strat-card" style="border-left:2px solid var(--accent);">
+        <div style="font-size:11px;font-weight:500;color:var(--accent);text-transform:uppercase;font-family:var(--mono);margin-bottom:8px;">Con primas a capital</div>
+        <div style="font-size:22px;font-weight:600;font-family:var(--mono);color:var(--accent);">3a 5m</div>
+        <div style="font-size:10px;color:var(--text3);margin-bottom:6px;">41 meses</div>
+        <div style="font-size:13px;font-family:var(--mono);color:var(--green);">$14.5M intereses</div>
+      </div>
+    </div>
+    <div class="alert alert-amber" style="margin-top:12px;margin-bottom:0;font-size:12px;">
+      Usar las primas a capital ahorra 11 meses y ~$3.93M en intereses. Opción intermedia: dividir la prima 50/50 entre navidad y capital.
     </div>
   </div>
 </div>
@@ -238,29 +283,29 @@
 </div>
 
 <script>
-const COLORS=["#ff5e5e","#ffb547","#5eb8ff","#5effa0","#c8f55a","#f0997b","#ed93b1","#afa9ec","#5dcaa5","#85b7eb","#d85a30","#378add","#7f77dd","#1d9e75","#e24b4a","#ba7517"];
+const COLORS=["#ff5e5e","#ffb547","#5eb8ff","#5effa0","#c8f55a","#f0997b","#ed93b1","#afa9ec","#5dcaa5","#85b7eb","#d85a30","#378add","#7f77dd","#1d9e75","#e24b4a","#ba7517","#9c6ade"];
 
 function defaultDebts(){return[
-  {name:"Moto (tía)",        balance:14394185, ea:16.07, minPay:321645, cut:"—",  status:"mora",    note:"2 meses sin pagar. Pagar 1 cuota el 30 abr con salario.",      color:COLORS[0]},
-  {name:"Codensa",           balance:1066988,  ea:20.00, minPay:261836, cut:"27", status:"al_dia",  note:"Pagar $261.836 el 27 abr. Último pago: mar 2026.",               color:COLORS[1]},
-  {name:"BBVA TC1",          balance:2433557,  ea:26.73, minPay:126794, cut:"14", status:"acuerdo", note:"Rediferido 24 meses. Sin cobro abril — próxima cuota 14 may.",   color:COLORS[2]},
-  {name:"BBVA TC2",          balance:1366264,  ea:26.73, minPay:71186,  cut:"15", status:"acuerdo", note:"Rediferido 24 meses. Sin cobro abril — próxima cuota 15 may.",   color:COLORS[3]},
-  {name:"BBVA C1",           balance:6368411,  ea:24.98, minPay:192482, cut:"12", status:"al_dia",  note:"Pagado 13 abr $191.981. Próxima cuota 12 may.",                  color:COLORS[4]},
-  {name:"BBVA C2",           balance:3508565,  ea:24.33, minPay:114650, cut:"7",  status:"al_dia",  note:"Débito automático día 7. Pagado 7 abr.",                          color:COLORS[5]},
-  {name:"TUYA (Alkosto MC)", balance:5104604,  ea:25.49, minPay:243093, cut:"9",  status:"acuerdo", note:"Ampliación 48 cuotas aprobada 13 abr. Primera cuota: corte 9 may. Sin cobro abril.", color:COLORS[6]},
-  {name:"Davivienda",        balance:13365906, ea:15.38, minPay:270000, cut:"13", status:"al_dia",  note:"Pagado 13 abr $269.135. Próxima cuota 13 may.",                  color:COLORS[7]},
-  {name:"ADDI",              balance:2716436,  ea:36.00, minPay:185725, cut:"14", status:"acuerdo", note:"Refinanciado. Pagadas: $130k (9 abr) + $185.153 (13 abr). Próxima: $185.140 hasta 14 may.", color:COLORS[8]},
-  {name:"Mamá",              balance:3500000,  ea:0,     minPay:126000, cut:"30", status:"familiar",note:"2 cuotas pendientes. Avisar antes del 30 abr. Pagar con salario.", color:COLORS[9]},
-  {name:"Nequi",             balance:761605,   ea:18.00, minPay:39356,  cut:"30", status:"al_dia",  note:"23 cuotas restantes. Pagar día 30 con salario.",                 color:COLORS[10]},
-  {name:"Sistecredito 766",  balance:1903549,  ea:28.00, minPay:100000, cut:"30", status:"mora",    note:"Acuerdo $100.000 el 30 abr. Hogar La Alquería.",                 color:COLORS[11]},
-  {name:"Sistecredito 6817", balance:288151,   ea:28.00, minPay:72169,  cut:"—",  status:"mora",    note:"Croydon Kennedy. Atacar después de Nequi.",                      color:COLORS[12]},
-  {name:"Sistecredito 142",  balance:215982,   ea:28.00, minPay:50000,  cut:"—",  status:"mora",    note:"Go Rigo Go. Atacar segundo.",                                     color:COLORS[13]},
-  {name:"NU",                balance:3000000,  ea:43.29, minPay:126924, cut:"22", status:"al_dia",  note:"48 cuotas. Próxima: 22 may. Tasa más alta del portafolio.",       color:COLORS[14]},
-  {name:"Hermanita",         balance:0,        ea:0,     minPay:0,      cut:"—",  status:"liquidada",note:"Liquidada 14 abr — $410.000 pagados. ✓",                       color:COLORS[15]},
+  {name:"Moto (tía)",        balance:14072540, ea:16.07, minPay:321645, cut:"—",  status:"mora",    note:"Atrasado. Pagar 2 cuotas en jun, 2 en jul.",            color:COLORS[0]},
+  {name:"Codensa TC",        balance:1604276,  ea:26.76, minPay:294008, cut:"27", status:"al_dia",  note:"Saldo subió. Pagar $294.008 + energía $80k en mayo.",   color:COLORS[1]},
+  {name:"BBVA TC1",          balance:2433557,  ea:26.73, minPay:126794, cut:"14", status:"acuerdo", note:"Rediferido 24 meses. Mora en mayo, retomar junio.",     color:COLORS[2]},
+  {name:"BBVA TC2",          balance:1366264,  ea:26.73, minPay:71186,  cut:"15", status:"acuerdo", note:"Rediferido 24 meses. Mora en mayo, retomar junio.",     color:COLORS[3]},
+  {name:"BBVA C1",           balance:6368411,  ea:24.98, minPay:192482, cut:"12", status:"al_dia",  note:"Mora en mayo. Retomar 25 junio.",                       color:COLORS[4]},
+  {name:"BBVA C2",           balance:3508565,  ea:24.33, minPay:114650, cut:"7",  status:"al_dia",  note:"Débito automático día 7.",                              color:COLORS[5]},
+  {name:"TUYA (Alkosto MC)", balance:5104604,  ea:25.49, minPay:243093, cut:"9",  status:"acuerdo", note:"Ampliación 48 cuotas. Pagar en mayo con préstamo José.", color:COLORS[6]},
+  {name:"Davivienda",        balance:13365906, ea:15.38, minPay:270000, cut:"13", status:"al_dia",  note:"Mora en mayo. Retomar 25 junio.",                       color:COLORS[7]},
+  {name:"ADDI",              balance:2716436,  ea:36.00, minPay:185725, cut:"14", status:"acuerdo", note:"Refinanciado. Mora en mayo, retomar junio.",            color:COLORS[8]},
+  {name:"Mamá",              balance:3500000,  ea:0,     minPay:126000, cut:"30", status:"familiar",note:"Avisada. 1 cuota en jun, 1 en jul.",                    color:COLORS[9]},
+  {name:"Nequi",             balance:722249,   ea:18.00, minPay:39356,  cut:"30", status:"al_dia",  note:"Mora en mayo. Retomar junio.",                          color:COLORS[10]},
+  {name:"Sistecredito (refinanciado)", balance:3204050, ea:0, minPay:534050, cut:"5", status:"acuerdo", note:"REFINANCIADO: 6 cuotas de $534.050 sin interés. Jul-Dic 2026. 3 créditos unificados.", color:COLORS[11]},
+  {name:"NU",                balance:3000000,  ea:43.29, minPay:126924, cut:"22", status:"al_dia",  note:"Mora en mayo. Tasa más alta — prioridad avalancha.",    color:COLORS[14]},
+  {name:"Hermana",           balance:350000,   ea:0,     minPay:294780, cut:"—",  status:"familiar",note:"Préstamo nuevo. Pagar $294.780 jun + $55.220 jul.",     color:COLORS[15]},
+  {name:"José (préstamo)",   balance:700000,   ea:0,     minPay:700000, cut:"25", status:"familiar",note:"Préstamo para cubrir mayo. Devolver 25 jun completo.",  color:COLORS[16]},
+  {name:"Vanti Listo (llantas moto)", balance:251750, ea:18.00, minPay:23659, cut:"—", status:"al_dia", note:"12 cuotas en factura de gas. $23.659/mes.",       color:COLORS[0]},
 ];}
 
-let DEBTS=JSON.parse(localStorage.getItem('deudas_v3')||'null')||defaultDebts();
-function save(){localStorage.setItem('deudas_v3',JSON.stringify(DEBTS));}
+let DEBTS=JSON.parse(localStorage.getItem('deudas_v5')||'null')||defaultDebts();
+function save(){localStorage.setItem('deudas_v5',JSON.stringify(DEBTS));}
 function eaToMv(ea){return Math.pow(1+ea/100,1/12)-1;}
 function fmt(n){return '$'+Math.round(n).toLocaleString('es-CO');}
 function fmtM(n){return '$'+(n/1000000).toFixed(2)+'M';}
@@ -271,7 +316,6 @@ function showPage(id,el){
   document.getElementById('page-'+id).classList.add('active');
   if(el)el.classList.add('active');
   if(id==='resumen')renderResumen();
-  if(id==='checklist')renderChecklist();
   if(id==='estrategia')updateStrat();
   if(id==='deudas')renderDeudas();
 }
@@ -284,9 +328,9 @@ function renderResumen(){
   const moras=active.filter(d=>d.status==='mora').length;
   document.getElementById('fecha-hoy').textContent=new Date().toLocaleDateString('es-CO',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
   document.getElementById('metrics-resumen').innerHTML=`
-    <div class="metric"><div class="mlabel">Deuda total</div><div class="mval v-red">${fmt(total)}</div><div class="msub">${active.length} activas</div></div>
+    <div class="metric"><div class="mlabel">Deuda total</div><div class="mval v-red">${fmt(total)}</div><div class="msub">${active.length} obligaciones</div></div>
     <div class="metric"><div class="mlabel">Interés/mes</div><div class="mval v-amber">${fmt(intMes)}</div><div class="msub">Costo puro</div></div>
-    <div class="metric"><div class="mlabel">Cuotas totales</div><div class="mval">${fmt(minPay)}</div><div class="msub">Suma mínimos</div></div>
+    <div class="metric"><div class="mlabel">Cuotas totales</div><div class="mval">${fmt(minPay)}</div><div class="msub">Mes completo</div></div>
     <div class="metric"><div class="mlabel">En mora</div><div class="mval ${moras>0?'v-red':'v-green'}">${moras}</div><div class="msub">Sistecredito x3</div></div>`;
   const sorted=[...active].filter(d=>d.ea>0).sort((a,b)=>(b.balance*eaToMv(b.ea))-(a.balance*eaToMv(a.ea)));
   const totalI=active.reduce((s,d)=>s+d.balance*eaToMv(d.ea),0);
@@ -305,44 +349,6 @@ function renderResumen(){
   new Chart(document.getElementById('chartPie'),{type:'doughnut',
     data:{labels:active.map(d=>d.name),datasets:[{data:active.map(d=>d.balance),backgroundColor:active.map(d=>d.color),borderColor:'#161616',borderWidth:2}]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.label}: ${fmt(c.parsed)}`}}},cutout:'65%'}});
-}
-
-const FASE1=[
-  {label:'ADDI activación',         amount:130000,  date:'9 abr',  key:'addi0'},
-  {label:'Impuesto carro',           amount:161000,  date:'9 abr',  key:'icarro'},
-  {label:'Impuesto moto',            amount:166700,  date:'14 abr', key:'imoto'},
-  {label:'BBVA C1',                  amount:191981,  date:'13 abr', key:'c1'},
-  {label:'Davivienda',               amount:269135,  date:'13 abr', key:'davi'},
-  {label:'ADDI primera cuota',       amount:185153,  date:'13 abr', key:'addi1'},
-  {label:'Hermanita — liquidada',    amount:410000,  date:'14 abr', key:'hermana'},
-];
-const FASE2=[
-  {label:'Codensa',                  amount:261836,  date:'27 abr', key:'codensa'},
-  {label:'Sistecredito 766',         amount:100000,  date:'30 abr', key:'siste'},
-];
-const FASE3=[
-  {label:'Mercado',                  amount:250000,  date:'30 abr', key:'mercado'},
-  {label:'Internet UNE',             amount:150000,  date:'30 abr', key:'internet'},
-  {label:'Tía — 1 cuota moto',       amount:321645,  date:'30 abr', key:'tia'},
-  {label:'Mamá — 1 cuota',           amount:126000,  date:'30 abr', key:'mama'},
-  {label:'Nequi',                    amount:39356,   date:'30 abr', key:'nequi'},
-];
-
-function getChecks(){return JSON.parse(localStorage.getItem('checks_v3')||'{}');}
-function saveChecks(c){localStorage.setItem('checks_v3',JSON.stringify(c));}
-function toggleCheck(key){const c=getChecks();c[key]=!c[key];saveChecks(c);renderChecklist();}
-
-function renderChecklist(){
-  const c=getChecks();
-  const ri=items=>items.map(item=>`
-    <div class="check-item" onclick="toggleCheck('${item.key}')">
-      <div class="check-box ${c[item.key]?'done':''}"></div>
-      <div style="flex:1;"><div class="check-label ${c[item.key]?'done':''}">${item.label}</div><div class="check-date">${item.date}</div></div>
-      <div class="check-amount" style="${c[item.key]?'text-decoration:line-through;color:var(--text3);':''}">${fmt(item.amount)}</div>
-    </div>`).join('');
-  document.getElementById('checks-fase1').innerHTML=ri(FASE1);
-  document.getElementById('checks-fase2').innerHTML=ri(FASE2);
-  document.getElementById('checks-fase3').innerHTML=ri(FASE3);
 }
 
 function computeStrat(debts,extra,order){
@@ -488,12 +494,6 @@ function deleteDebt(){
   if(confirm(`¿Eliminar "${DEBTS[idx].name}"?`)){DEBTS.splice(idx,1);save();closeModal();renderDeudas();}
 }
 document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeModal();});
-
-// Pre-marcar pagos ya hechos
-const preChecked={addi0:true,icarro:true,imoto:true,c1:true,davi:true,addi1:true,hermana:true};
-const existing=JSON.parse(localStorage.getItem('checks_v3')||'{}');
-const merged=Object.assign(preChecked,existing);
-localStorage.setItem('checks_v3',JSON.stringify(merged));
 
 renderResumen();
 </script>
